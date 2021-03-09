@@ -1,0 +1,11 @@
+{
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "cSpell.ignoreWords": [
+        "delims",
+        "ncols"
+    ],
+    "cSpell.words": [
+        "nbplot"
+    ]
+}

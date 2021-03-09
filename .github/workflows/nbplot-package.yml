@@ -1,0 +1,63 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: nbplot package
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install flake8
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test delimiters with unittest
+      run: |
+        python nbplot/delim.py
+    - name: Build and install the package
+      run: |
+        python -m pip install --upgrade build wheel
+        python -m build
+        python -m pip install dist/*.whl
+    - name: Generate and run notebooks
+      run: |
+        python -m pip install pandas
+        
+        echo "1\n2\n3\n" | nbplot -g -o trivial.ipynb -
+        jupyter nbconvert --to notebook --inplace --execute trivial.ipynb
+
+        nbplot -g -o multiple.ipynb tests/*.csv
+        jupyter nbconvert --to notebook --inplace --execute multiple.ipynb
+    - name: Try without pandas
+      run: |
+        python -m pip uninstall --yes pandas
+
+        nbplot -g -t numpy -o multiple_numpy.ipynb tests/*.csv
+        jupyter nbconvert --to notebook --inplace --execute multiple_numpy.ipynb
+
+    - name: Auto-detection that pandas is not installed
+      run: |
+        nbplot -g -o multiple_numpy.ipynb tests/*.csv
+        jupyter nbconvert --to notebook --inplace --execute multiple_numpy.ipynb
+
