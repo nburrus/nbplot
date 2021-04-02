@@ -233,7 +233,12 @@ def generate_notebook(args, template_name):
         output_cells.append(output_cell)
 
     return nbformat.v4.new_notebook(cells=output_cells, metadata={
-        'language': 'python',
+        'language_info': {
+            'file_extension': '.py',
+            'mimetype': 'text/x-python',
+            'name': 'python',
+            'version': "3",
+        }
     })
 
 def find_running_server_with_same_working_dir(nb_working_dir: Path):
