@@ -30,7 +30,9 @@ pip install nbplot
 
 * Will try to reuse an existing instance of notebook server (inspired by [nbopen](https://github.com/takluyver/nbopen)).
 
-# Examples
+# Examples 
+
+## Plots
 
 ```
 $ cat mydata.txt
@@ -69,6 +71,26 @@ $ for i in `seq -10 10`; do echo $i $((i*i)); done | nbplot -
 ```
 
 * Reads the data to plot from stdin and generates a notebook to plot it, with the data embedded as a string.
+
+![nbplot_stdin](https://user-images.githubusercontent.com/541507/113489773-452dd880-94c6-11eb-8ba5-eaceb39bd4e3.png)
+
+# Images
+
+```
+$ nbplot -t imshow image1.png image2.jpg
+```
+
+* Uses the `imshow` template to generate a notebook that loads and displays the 2 images with matplotlib `imshow` and `PIL.Image`.
+
+---
+
+```
+$ nbplot -t imshow paste-image
+```
+
+* Use the special `paste-image` filename to directly plot an image from the clipboard. It will get embedded into the notebook via a base64 string.
+
+![nbplot_images_clipboard](https://user-images.githubusercontent.com/541507/113489588-5d512800-94c5-11eb-94e1-e84f7f359f2d.png)
 
 # Creating a custom template
 

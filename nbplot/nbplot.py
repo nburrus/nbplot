@@ -307,7 +307,11 @@ def fill_inputs(args):
             if not f.exists():
                 critical(f"`{f}' does not exist.")
                 sys.exit(1)
-            delim = guess_delimiter(open(f, 'r'))
+            try:
+                delim = guess_delimiter(open(f, 'r'))
+            except UnicodeDecodeError as e:
+                warning(f"Could not parse {f} to find the delimiter, not a utf-8 file.")
+                delim = ' '
             pretty_name = str(f)
             pretty_name = '...' + pretty_name[-32:] if len(pretty_name) > 32 else pretty_name
             # Make sure to include the quote as this string is meant to be used as code.
