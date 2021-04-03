@@ -57,7 +57,7 @@ def parse_command_line():
     parser = ArgumentParser(description='Command-line utility to quickly plot files in a Jupyter notebook.')
 
     parser.add_argument("files_to_plot", nargs="+", type=Path,
-                        help="Files to plot. Use '-' for stdin.")
+                        help="Files to plot. Use '-' for stdin, 'paste-image' for images in the clipboard.")
 
     parser.add_argument("--output", "-o", type=str, default=None,
                         help="Output ipynb file. If unspecified, a filename with the date will be generated.")
@@ -302,6 +302,22 @@ def fill_inputs(args):
             abs_path_or_io = f'io.BytesIO(b64decode({b64_content}))'
             delim = guess_delimiter(io.StringIO(content.decode('utf-8')))
             input = Input(pretty_name='stdin', rel_path=Path('stdin'), abs_path_or_io=abs_path_or_io, guessed_sep=delim)
+            shared.inputs.append(input)
+        elif str(f) == 'paste-image':
+            try:
+                from PIL import ImageGrab
+            except ImportError:
+                error("Pillow is required to support images from the clipboard: `pip install pillow'")
+                sys.exit(1)
+            im = ImageGrab.grabclipboard()
+            if im is None:
+                error("No image in the clipboard.")
+                sys.exit(1)
+            byte_io = io.BytesIO()
+            im.save(byte_io, 'png')
+            b64_content = base64.b64encode(byte_io.getvalue())
+            abs_path_or_io = f'io.BytesIO(b64decode({b64_content}))'
+            input = Input(pretty_name='clipboard', rel_path=Path('clipboard'), abs_path_or_io=abs_path_or_io, guessed_sep=' ')
             shared.inputs.append(input)
         else:
             if not f.exists():
