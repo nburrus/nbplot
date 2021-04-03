@@ -174,7 +174,7 @@ def load_source_code_from_notebooks(args):
         except Exception as e:
             error(f"could not create {user_config_path}.")
 
-    for nbpath in sorted(user_templates_path.glob('*.ipynb')):
+    for nbpath in sorted(user_templates_path.glob('**/*.ipynb')):
         info(f'Loading {nbpath}...')
         load_notebook(nbpath)
 
@@ -218,7 +218,8 @@ def generate_notebook(args, template_name):
     """Generate the output notebook using the chosen template"""
     output_cells = []
     if template_name not in shared.templates:
-        error(f"Could not find the template {template_name}")
+        error(f"Could not find the template `{template_name}'")
+        print (f"Available templates: [{', '.join(sorted(shared.templates.keys()))}]")
         sys.exit(1)
 
     template = shared.templates[template_name]
