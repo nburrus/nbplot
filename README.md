@@ -1,4 +1,6 @@
-# nbplot
+![image](https://img.shields.io/github/workflow/status/nburrus/nbplot/nbplot%20package)
+
+# nbplot 
 
 Command-line utility to quickly plot files in a Jupyter notebook.
 
