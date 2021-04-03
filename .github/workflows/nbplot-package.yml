@@ -5,12 +5,12 @@ name: nbplot package
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
