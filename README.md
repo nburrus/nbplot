@@ -4,10 +4,16 @@ Command-line utility to quickly plot files in a Jupyter notebook.
 
 Tools like pandas+matplotlib are very powerful, but it takes some time to plot a file from scratch: run a Jupyter notebook instance, create a notebook, import the modules, go grab the path of the file, remember how to call `read_csv` properly, create the matplotlib figure, etc. The goal of `nbplot` is to remove that friction and make this as easy as launching a dedicated tool like `gnuplot`.
 
+# Demo
+
+![nbplot_demo](https://user-images.githubusercontent.com/541507/113471006-d155e680-9459-11eb-8333-ada4cb6e45fe.png)
+
 # Installation
 
+Python 3.7 or higher required.
+
 ```
-python3 -mpip install nbplot
+pip install nbplot
 ```
 
 # Features
@@ -37,8 +43,6 @@ $ nbplot mydata.txt
 * Generates a notebook `~/nbplot/{{date}}-mydata.ipynb` with the code to load `mydata.txt` with `pandas.read_csv` and the guessed space delimiter.
 
 * Opens the notebook in the browser, reusing existing instances of Jupyter if possible, starting a new one otherwise.
-
-![Generated plot cell in the notebook](https://user-images.githubusercontent.com/541507/112766457-1c16cf00-9012-11eb-9ccc-97bbedbda8b0.png)
 
 ---
 
