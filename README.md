@@ -112,3 +112,24 @@ The search for template files is recursive, so it is possible to manage custom t
 # Configuring the default behavior
 
 When first launched, `nbplot` generates a configuration file in `~/.nbplot/config.ipynb`. It is also a notebook, and the config dictionary will be read after evaluating the cell. The main options are the default template, the folder from which to start the notebook instance, and the folder where the generated plots will be saved.
+
+# ChangeLog
+
+## v0.2 (April 4th, 2021)
+
+New features:
+
+- Add an `imshow` template to show images with `matplotlib.imshow`.
+- Add a `daltonize` template to show images enhanced for colorblind people.
+- Glob templates recursively in `~/.nbplot`. This makes it possible to manage private templates via a git cloned subfolder.
+- Add the `paste-image` special filename to grab an image from the clipboard and embed its content in the notebook.
+
+
+Fixes:
+
+- Fix the metadata to automatically load a Python kernel.
+- Don't fail when trying to determine the delimiter on binary files.
+- `pandas`: handle files with multiple spaces / tabs between columns.
+## v0.1 (April 1st, 2021)
+
+Initial release.
