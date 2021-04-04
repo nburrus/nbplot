@@ -326,7 +326,8 @@ def fill_inputs(args):
             try:
                 delim = guess_delimiter(open(f, 'r'))
             except UnicodeDecodeError as e:
-                warning(f"Could not parse {f} to find the delimiter, not a utf-8 file.")
+                # Not a warning since images will never work for example.
+                info(f"Could not parse {f} to find the delimiter, not a utf-8 file.")
                 delim = ' '
             pretty_name = str(f)
             pretty_name = '...' + pretty_name[-32:] if len(pretty_name) > 32 else pretty_name

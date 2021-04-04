@@ -61,3 +61,13 @@ jobs:
         nbplot -g -o multiple_numpy.ipynb tests/*.csv
         jupyter nbconvert --to notebook --inplace --execute multiple_numpy.ipynb
 
+    - name: Plot images
+      run: |
+        nbplot -t imshow -g -o imshow.ipynb tests/Ishihara_9_from_wikipedia.png
+        jupyter nbconvert --to notebook --inplace --execute imshow.ipynb
+
+    - name: Daltonize
+      run: |
+        nbplot -t daltonize -g -o daltonize.ipynb tests/Ishihara_9_from_wikipedia.png
+        jupyter nbconvert --to notebook --inplace --execute daltonize.ipynb
+

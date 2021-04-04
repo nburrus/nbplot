@@ -92,12 +92,23 @@ $ nbplot -t imshow paste-image
 
 ![nbplot_images_clipboard](https://user-images.githubusercontent.com/541507/113489588-5d512800-94c5-11eb-94e1-e84f7f359f2d.png)
 
+---
+
+```
+$ nbplot -t daltonize Ishihara_9_from_wikipedia.png
+```
+
+* The `daltonize` template generates a notebook with the same image rendered with various color filters that can either help color-blind people to better see the contrasts, or designers to simulate different kinds of color blindness. Powered by the [daltonize](https://github.com/joergdietrich/daltonize) module.
+
+![nbplot_daltonize](https://user-images.githubusercontent.com/541507/113513842-d4d99280-956b-11eb-90aa-94484e8128d9.png)
+
 # Creating a custom template
 
 Templates are just regular `.ipynb` notebooks, with special variables like the filenames to plot that will get replaced when generating the output notebook.
 
 The easiest way to create a custom template is to copy and adapt an existing one from the `templates/` folder of the repository, and put it in your `~/.nbplot/` folder, next to the configuration file. The name of the template is defined in `metadata` dictionary defined in the special cell that stars with a `# [[nbplot]] template` line.
 
+The search for template files is recursive, so it is possible to manage custom templates in e.g. an external repository and git clone it in a subfolder under `~/.nbplot`.
 # Configuring the default behavior
 
 When first launched, `nbplot` generates a configuration file in `~/.nbplot/config.ipynb`. It is also a notebook, and the config dictionary will be read after evaluating the cell. The main options are the default template, the folder from which to start the notebook instance, and the folder where the generated plots will be saved.
