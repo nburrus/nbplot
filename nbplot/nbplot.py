@@ -56,7 +56,7 @@ def parse_command_line():
     from argparse import ArgumentParser
     parser = ArgumentParser(description='Command-line utility to quickly plot files in a Jupyter notebook.')
 
-    parser.add_argument("files_to_plot", nargs="+", type=Path,
+    parser.add_argument("files_to_plot", nargs="*", type=Path,
                         help="Files to plot. Use '-' for stdin, 'paste-image' for images in the clipboard.")
 
     parser.add_argument("--output", "-o", type=str, default=None,
@@ -287,7 +287,7 @@ def get_output_notebook_filepath(args):
         ipynb_dir = shared.config['generated_plots_directory']
         if not ipynb_dir.exists():
             os.makedirs(ipynb_dir)
-        first_file_stem = args.files_to_plot[0].stem
+        first_file_stem = args.files_to_plot[0].stem if args.files_to_plot else "empty"
         if first_file_stem == '-':
             first_file_stem = 'stdin'
         date_str = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -354,6 +354,9 @@ def main():
     if args.template:
         template = args.template
     print(f'Chosen template: {template}')
+
+    if not args.files_to_plot and not ask_confirmation("No input files provided, create an empty notebook"):
+        sys.exit(0)
 
     nb = generate_notebook(args, template)
 

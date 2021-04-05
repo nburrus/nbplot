@@ -71,3 +71,8 @@ jobs:
         nbplot -t daltonize -g -o daltonize.ipynb tests/Ishihara_9_from_wikipedia.png
         jupyter nbconvert --to notebook --inplace --execute daltonize.ipynb
 
+    - name: Empty
+      run: |
+        nbplot -t empty -g -o empty.ipynb
+        jupyter nbconvert --to notebook --inplace --execute empty.ipynb
+

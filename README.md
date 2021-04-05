@@ -102,6 +102,14 @@ $ nbplot -t daltonize Ishihara_9_from_wikipedia.png
 
 ![nbplot_daltonize](https://user-images.githubusercontent.com/541507/113513842-d4d99280-956b-11eb-90aa-94484e8128d9.png)
 
+## Other
+
+```
+$ nbplot -t empty -o empty.ipynb
+```
+
+* Creates an empty notebook in the current folder with the name `empty.ipynb` and opens it.
+
 # Creating a custom template
 
 Templates are just regular `.ipynb` notebooks, with special variables like the filenames to plot that will get replaced when generating the output notebook.
