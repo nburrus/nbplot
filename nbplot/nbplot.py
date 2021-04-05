@@ -9,6 +9,7 @@ import base64
 from collections import namedtuple
 from datetime import datetime
 import io
+import glob
 import os
 from pathlib import Path
 import re
@@ -174,7 +175,10 @@ def load_source_code_from_notebooks(args):
         except Exception as e:
             error(f"could not create {user_config_path}.")
 
-    for nbpath in sorted(user_templates_path.glob('**/*.ipynb')):
+    # Using glob.glob and not pathlib.glob because of a bug that makes the latter not follow
+    # symlinks.
+    for nbpath in sorted(glob.glob(os.path.join(user_templates_path, '**/*.ipynb'), recursive=True)):
+        nbpath = Path(nbpath)
         info(f'Loading {nbpath}...')
         load_notebook(nbpath)
 
