@@ -102,7 +102,7 @@ $ nbplot -t daltonize Ishihara_9_from_wikipedia.png
 
 ![nbplot_daltonize](https://user-images.githubusercontent.com/541507/113513842-d4d99280-956b-11eb-90aa-94484e8128d9.png)
 
-## Other
+## Empty notebook, no input files
 
 ```
 $ nbplot -t empty -o empty.ipynb
@@ -122,6 +122,12 @@ The search for template files is recursive, so it is possible to manage custom t
 When first launched, `nbplot` generates a configuration file in `~/.nbplot/config.ipynb`. It is also a notebook, and the config dictionary will be read after evaluating the cell. The main options are the default template, the folder from which to start the notebook instance, and the folder where the generated plots will be saved.
 
 # ChangeLog
+
+## v0.3 (April 6th, 2021)
+
+- Add an empty template and accept to run without input files
+- Fix the recursive globbing of user templates to follow symlinks
+- Fix the image type conversion in the daltonize template
 
 ## v0.2 (April 4th, 2021)
 
