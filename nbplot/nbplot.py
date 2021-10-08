@@ -355,9 +355,12 @@ def main():
     load_source_code_from_notebooks(args)
 
     template = shared.config['default_template']
+    print ("Available templates: [" + ", ".join(shared.templates.keys()) + "]")
     if args.template:
         template = args.template
-    print(f'Chosen template: {template}')
+        print (f'Chosen template: {template}')
+    else:
+        print (f'Chosen template (by default): {template}')
 
     if not args.files_to_plot and not ask_confirmation("No input files provided, create an empty notebook"):
         sys.exit(0)
