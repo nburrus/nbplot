@@ -18,6 +18,7 @@ import string
 import sys
 from types import SimpleNamespace
 import webbrowser
+import subprocess
 
 # To parse/write notebooks
 import nbformat
@@ -28,7 +29,7 @@ from jupyter_server import serverapp
 from traitlets.config import Config
 
 from .delim import guess_delimiter
-from .utils import ask_confirmation, StringTemplateWithDot, LoggingLevelContext
+from .utils import ask_confirmation, StringTemplateWithDot, LoggingLevelContext, TermColor
 
 here_path = Path(__file__).parent
 
@@ -48,6 +49,7 @@ shared = SimpleNamespace(
     config={
         'jupyter_notebook_working_directory': Path().home(),
         'generated_plots_directory': Path().home() / 'nbplots',
+        'editor': ['code', '${nbpath}']
     },
 
     inputs=[]  # list[Input]
@@ -351,6 +353,13 @@ def fill_inputs(args):
             input = Input(pretty_name=pretty_name, rel_path=f, abs_path_or_io=abs_path_or_io, guessed_sep=delim)
             shared.inputs.append(input)
 
+
+def ask_action():
+    if not sys.stdin.isatty():
+        return True
+    return input(f"{TermColor.BOLD}Open in browser / editor? (Y/e/n) {TermColor.END}").lower()
+
+
 def main():
     args = parse_command_line()
 
@@ -382,12 +391,21 @@ def main():
     print(f'{output_nb} successfully generated.')
     nbformat.write(nb, output_nb)
 
-    if args.generate_only or not ask_confirmation("Open the notebook in the browser"):
+    if args.generate_only:
         sys.exit(0)
 
-    # It's very verbose by default, make it more quiet.
-    with LoggingLevelContext(logging.ERROR if not args.debug else logging.WARNING):
-        open_notebook(args, output_nb)
+    action = ask_action()
+    if action == 'e':
+        editor_cmd_array = shared.config['editor']
+        editor_cmd_array = [StringTemplateWithDot(cmd).safe_substitute(nbpath=output_nb) for cmd in editor_cmd_array]
+        print(f"Running {' '.join(editor_cmd_array)}")
+        subprocess.run(editor_cmd_array, shell=False, check=True)
+    elif action == 'y':
+        # It's very verbose by default, make it more quiet.
+        with LoggingLevelContext(logging.ERROR if not args.debug else logging.WARNING):
+            open_notebook(args, output_nb)
+    else:
+        sys.exit(0)
 
 if __name__ == '__main__':
     main()
