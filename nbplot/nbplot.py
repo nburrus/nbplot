@@ -23,8 +23,8 @@ import webbrowser
 import nbformat
 
 # To launch or reuse a server.
-from notebook.utils import exists, url_path_join, url_escape
-from notebook import notebookapp
+from jupyter_server.utils import url_path_join, url_escape
+from jupyter_server import serverapp
 from traitlets.config import Config
 
 from .delim import guess_delimiter
@@ -238,10 +238,21 @@ def generate_notebook(args, template_name):
         output_cells.append(output_cell)
 
     return nbformat.v4.new_notebook(cells=output_cells, metadata={
+        'kernelspec': {
+            'display_name': 'Python 3',
+            'language': 'python',
+            'name': 'python3'
+        },
         'language_info': {
+            'codemirror_mode': {
+                'name': 'ipython',
+                'version': 3
+            },
             'file_extension': '.py',
             'mimetype': 'text/x-python',
             'name': 'python',
+            'nbconvert_exporter': 'python',
+            'pygments_lexer': 'ipython3',
             'version': "3",
         }
     })
@@ -249,7 +260,7 @@ def generate_notebook(args, template_name):
 def find_running_server_with_same_working_dir(nb_working_dir: Path):
     # If the server does not have the same working dir then the relative
     # paths won't work. So we need to find one that has the right one.
-    for si in notebookapp.list_running_servers():
+    for si in serverapp.list_running_servers():
         if Path(si['notebook_dir']) == nb_working_dir:
             return si
     return None
@@ -265,7 +276,7 @@ def open_notebook(args, nb_file: Path):
         if os.sep != '/':
             rel_path = rel_path.replace(os.sep, '/')
         url = url_path_join(running_server['url'], 'notebooks', url_escape(str(rel_path)))
-        na = notebookapp.NotebookApp.instance()
+        na = serverapp.NotebookApp.instance()
         na.load_config_file()
         browser = webbrowser.get(na.browser or None)
         browser.open(url, new=2)
@@ -276,11 +287,11 @@ def open_notebook(args, nb_file: Path):
         # loaded afterwards from the config file. So by specifying config, we
         # can use this mechanism.
         cfg = Config()
-        cfg.NotebookApp.file_to_run = str(nb_file.resolve())
-        cfg.NotebookApp.notebook_dir = str(nb_working_dir)
-        cfg.NotebookApp.open_browser = True
+        cfg.ServerApp.file_to_run = str(nb_file.resolve())
+        cfg.ServerApp.notebook_dir = str(nb_working_dir)
+        cfg.ServerApp.open_browser = True
         print("Starting a new notebook server")
-        notebookapp.launch_new_instance(config=cfg,
+        serverapp.launch_new_instance(config=cfg,
                                         argv=[],  # Avoid it seeing our own argv
                                         )
 
