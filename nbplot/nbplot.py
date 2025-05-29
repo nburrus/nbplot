@@ -263,7 +263,7 @@ def find_running_server_with_same_working_dir(nb_working_dir: Path):
     # If the server does not have the same working dir then the relative
     # paths won't work. So we need to find one that has the right one.
     for si in serverapp.list_running_servers():
-        if Path(si['notebook_dir']) == nb_working_dir:
+        if 'root_dir' in si and Path(si['root_dir']) == nb_working_dir:
             return si
     return None
 
@@ -278,7 +278,7 @@ def open_notebook(args, nb_file: Path):
         if os.sep != '/':
             rel_path = rel_path.replace(os.sep, '/')
         url = url_path_join(running_server['url'], 'notebooks', url_escape(str(rel_path)))
-        na = serverapp.NotebookApp.instance()
+        na = serverapp.ServerApp.instance()
         na.load_config_file()
         browser = webbrowser.get(na.browser or None)
         browser.open(url, new=2)
@@ -400,12 +400,12 @@ def main():
         editor_cmd_array = [StringTemplateWithDot(cmd).safe_substitute(nbpath=output_nb) for cmd in editor_cmd_array]
         print(f"Running {' '.join(editor_cmd_array)}")
         subprocess.run(editor_cmd_array, shell=False, check=True)
-    elif action == 'y':
+    elif action == 'n':
+        sys.exit(0)
+    else:  # action == 'y' or just enter
         # It's very verbose by default, make it more quiet.
         with LoggingLevelContext(logging.ERROR if not args.debug else logging.WARNING):
             open_notebook(args, output_nb)
-    else:
-        sys.exit(0)
 
 if __name__ == '__main__':
     main()
