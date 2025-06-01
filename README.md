@@ -12,7 +12,7 @@ Tools like pandas+matplotlib are very powerful, but it takes some time to plot a
 
 # Installation
 
-Python 3.7 or higher required.
+Tested on Python 3.8 to 3.12, but it likely works on more versions.
 
 ```
 pip install nbplot
