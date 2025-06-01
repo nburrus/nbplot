@@ -290,7 +290,7 @@ def open_notebook(args, nb_file: Path):
         # can use this mechanism.
         cfg = Config()
         cfg.ServerApp.file_to_run = str(nb_file.resolve())
-        cfg.ServerApp.notebook_dir = str(nb_working_dir)
+        cfg.ServerApp.root_dir = str(nb_working_dir)
         cfg.ServerApp.open_browser = True
         print("Starting a new notebook server")
         serverapp.launch_new_instance(config=cfg,
